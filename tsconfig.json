@@ -7,6 +7,12 @@
 		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true,
 		"strict": true,
+		"baseUrl": ".",
+		"paths": {
+			"#/*": [
+				"./src/*"
+			]
+		}
 	},
 	"exclude": [
 		"node_modules"

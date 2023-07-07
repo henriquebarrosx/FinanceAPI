@@ -1,7 +1,6 @@
-import { IHttpServer } from "../adapters/express-adapter/index.gateway"
-
-import { createTransactions } from "../../app/use-cases/transactions/create-transactions"
-import { listTransactionsUseCase } from "../../app/use-cases/transactions/list-transactions"
+import { IHttpServer } from "#/infra/adapters/express-adapter/index.gateway"
+import { createTransactions } from "#/app/use-cases/transactions/create-transactions"
+import { listTransactionsUseCase } from "#/app/use-cases/transactions/list-transactions"
 
 export class Router {
     constructor(private readonly httpServer: IHttpServer) { }
