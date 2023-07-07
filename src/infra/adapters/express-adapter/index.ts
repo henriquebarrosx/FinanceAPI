@@ -1,6 +1,7 @@
-import express, { Express } from "express"
 import { logger } from "../logger-adapter"
-import { IHttpServer } from "./index.gateway"
+import express, { Express, Request, Response } from "express"
+
+import { IHttpServer, IRequestType } from "./index.gateway"
 
 export class ExpressAdapter implements IHttpServer {
     private app: Express
@@ -13,6 +14,13 @@ export class ExpressAdapter implements IHttpServer {
     init(): void {
         this.app.listen(process.env.PORT, () => {
             logger.info(`Server running at port ${process.env.PORT}`)
+        })
+    }
+
+    on(requestType: IRequestType, entrypoint: string, callback: Function): void {
+        this.app[requestType](entrypoint, async (request: Request, response: Response) => {
+            const output = await callback(request.params, request.body)
+            response.json(output)
         })
     }
 }
