@@ -1,0 +1,11 @@
+{
+  "name": "finance-api",
+  "version": "1.0.0",
+  "description": "An finance API to create/edit/list transactions",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Henrique Barros",
+  "license": "ISC"
+}
