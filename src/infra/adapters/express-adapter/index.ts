@@ -20,7 +20,7 @@ export class ExpressAdapter implements IHttpServer {
     on(requestType: IRequestType, entrypoint: string, callback: Function): void {
         this.app[requestType](entrypoint, async (request: Request, response: Response) => {
             const output = await callback(request.params, request.body)
-            response.json(output)
+            response.status(output.status).json(output.data)
         })
     }
 }
