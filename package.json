@@ -2,13 +2,14 @@
 	"name": "finance-api",
 	"version": "1.0.0",
 	"description": "An finance API to create/edit/list transactions",
-	"main": "index.ts",
 	"scripts": {
+		"start": "ts-node ./src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Henrique Barros",
 	"license": "ISC",
 	"dependencies": {
+		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
 		"ts-node": "^10.9.1",
 		"typescript": "^5.1.6"
