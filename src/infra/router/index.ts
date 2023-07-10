@@ -1,12 +1,19 @@
+import { SignInUseCase } from "#/app/use-cases/session/sign-in"
+import { UsersRepository } from "#/infra/repositories/users-repository"
+import { MongoClientAdapter } from "#/infra/adapters/mongo-client-adapter"
 import { IHttpServer } from "#/infra/adapters/express-adapter/index.gateway"
-import { createTransactions } from "#/app/use-cases/transactions/create-transactions"
-import { listTransactionsUseCase } from "#/app/use-cases/transactions/list-transactions"
+
+const connection = new MongoClientAdapter()
+
+const usersRepository = new UsersRepository(connection)
 
 export class Router {
     constructor(private readonly httpServer: IHttpServer) { }
 
     init(): void {
-        this.httpServer.on("post", "/v1/transactions", createTransactions.execute)
-        this.httpServer.on("get", "/v1/transactions", listTransactionsUseCase.execute)
+        this.httpServer.on("post", "/v1/users", (requestBody: any) => {
+            const signIn = new SignInUseCase(usersRepository)
+            return signIn.execute(requestBody)
+        })
     }
 }
