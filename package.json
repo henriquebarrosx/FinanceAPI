@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "An finance API to create/edit/list transactions",
 	"scripts": {
-		"start": "ts-node -r tsconfig-paths/register ./src/index.ts",
+		"start": "nodemon -r tsconfig-paths/register ./src/index.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Henrique Barros",
@@ -11,11 +11,13 @@
 	"dependencies": {
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
+		"mongodb": "^5.7.0",
 		"ts-node": "^10.9.1",
 		"typescript": "^5.1.6"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.17",
+		"nodemon": "^3.0.1",
 		"tsconfig-paths": "^4.2.0"
 	}
 }
