@@ -35,6 +35,8 @@ export class UsersRepository implements IUsersRepository {
                 name: user.name,
                 email: user.email,
                 pictureURL: user.pictureURL,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
             })
 
         this.connection.end()
