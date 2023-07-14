@@ -1,10 +1,14 @@
 import { User } from "#/domain/entities/user"
+import { ITokenizer } from "#/infra/adapters/jwt-adapter/index.gateway"
 import { IResponse } from "#/infra/adapters/express-adapter/index.gateway"
 import { InvalidArgException } from "#/infra/exceptions/invalid-arg-exception"
 import { IUsersRepository } from "#/infra/repositories/users-repository/index.gateway"
 
 export class SocialSignInUseCase {
-    constructor(private readonly usersRepository: IUsersRepository) { }
+    constructor(
+        private readonly tokenGenerator: ITokenizer,
+        private readonly usersRepository: IUsersRepository
+    ) { }
 
     async execute(input: Input): Promise<IResponse<Output>> {
         const user = this.getUserBuild(input)
@@ -14,7 +18,12 @@ export class SocialSignInUseCase {
         }
 
         const { id } = await this.usersRepository.create(user)
-        return { status: 201, data: { id } }
+        const userToken = this.tokenGenerator.assign(id)
+
+        return {
+            status: 201,
+            data: { id, token: userToken }
+        }
     }
 
     private getUserBuild({ name, email, pictureURL }: Input): User {
@@ -39,4 +48,5 @@ export type Input = {
 
 export type Output = {
     id: string
+    token: string
 }

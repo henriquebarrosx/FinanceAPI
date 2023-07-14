@@ -1,3 +1,4 @@
+import { JwtAdapter } from "#/infra/adapters/jwt-adapter"
 import { UsersRepository } from "#/infra/repositories/users-repository"
 import { MongoClientAdapter } from "#/infra/adapters/mongo-client-adapter"
 import { SocialSignInUseCase } from "#/app/use-cases/session/social-sign-in"
@@ -11,7 +12,8 @@ export class Router {
 
     init(): void {
         this.httpServer.on("post", "/v1/sign-in/social", (requestBody: any) => {
-            const socialSignIn = new SocialSignInUseCase(usersRepository)
+            const tokenGenerator = new JwtAdapter()
+            const socialSignIn = new SocialSignInUseCase(tokenGenerator, usersRepository)
             return socialSignIn.execute(requestBody)
         })
     }
