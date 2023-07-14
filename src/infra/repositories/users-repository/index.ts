@@ -17,7 +17,14 @@ export class UsersRepository implements IUsersRepository {
 
         results.forEach((result) => {
             const { id, name, email, pictureURL } = result
-            users.push(User.create({ id, name, email, pictureURL }))
+
+            const user = new User()
+                .withId(id)
+                .withName(name)
+                .withEmail(email)
+                .withPictureURL(pictureURL)
+
+            users.push(user)
         })
 
         this.connection.end()

@@ -19,8 +19,23 @@ export class ExpressAdapter implements IHttpServer {
 
     on(requestType: IRequestType, entrypoint: string, callback: Function): void {
         this.app[requestType](entrypoint, async (request: Request, response: Response) => {
-            const output = await callback(request.body, request.params)
-            response.status(output.status).json(output.data)
+            try {
+                const output = await callback(request.body, request.params)
+                response.status(output.status).json(output.data)
+                return
+            }
+
+            catch (exception: any) {
+                if (exception?.code && exception?.message) {
+                    logger.error(`[ Error ${exception.code} ] - ${exception.message}`)
+                    response.status(exception.code).json({ message: exception.message })
+                    return
+                }
+
+                logger.error(`[ Error 500 ] - Internal Server Error`)
+                response.status(500).json({ message: "Internal Server Error" })
+                return
+            }
         })
     }
 }
