@@ -32,7 +32,7 @@ export class ExpressAdapter implements IHttpServer {
                     return
                 }
 
-                logger.error(`[ Error 500 ] - Internal Server Error`)
+                logger.error(`[ Error 500 ] - Internal Server Error: ${exception?.message}`)
                 response.status(500).json({ message: "Internal Server Error" })
                 return
             }
