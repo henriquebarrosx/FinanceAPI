@@ -4,7 +4,9 @@ import { MongoClientAdapter } from "#/infra/adapters/mongo-client-adapter"
 import { SocialSignInUseCase } from "#/app/use-cases/session/social-sign-in"
 import { IHttpServer } from "#/infra/adapters/express-adapter/index.gateway"
 
+const tokenGenerator = new JwtAdapter()
 const connection = new MongoClientAdapter()
+
 const usersRepository = new UsersRepository(connection)
 
 export class Router {
@@ -12,7 +14,6 @@ export class Router {
 
     init(): void {
         this.httpServer.on("post", "/v1/sign-in/social", (requestBody: any) => {
-            const tokenGenerator = new JwtAdapter()
             const socialSignIn = new SocialSignInUseCase(tokenGenerator, usersRepository)
             return socialSignIn.execute(requestBody)
         })
