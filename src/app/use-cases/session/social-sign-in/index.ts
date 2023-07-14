@@ -14,14 +14,14 @@ export class SocialSignInUseCase {
         const foundUser = await this.usersRepository.findByEmail(user.email)
 
         if (foundUser) {
-            const token = this.tokenGenerator.assign(foundUser.id)
-            return { status: 200, data: { token } }
+            const accessToken = this.tokenGenerator.assign(foundUser.id)
+            return { status: 200, data: { accessToken } }
         }
 
         const { id } = await this.usersRepository.create(user)
-        const token = this.tokenGenerator.assign(id)
+        const accessToken = this.tokenGenerator.assign(id)
 
-        return { status: 200, data: { token } }
+        return { status: 200, data: { accessToken } }
     }
 
     private getUserBuild({ name, email, pictureURL }: Input): User {
@@ -39,5 +39,5 @@ export type Input = {
 }
 
 export type Output = {
-    token: string
+    accessToken: string
 }
