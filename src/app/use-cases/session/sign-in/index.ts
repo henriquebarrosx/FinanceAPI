@@ -3,7 +3,7 @@ import { ITokenizer } from "#/infra/adapters/jwt-adapter/index.gateway"
 import { IResponse } from "#/infra/adapters/express-adapter/index.gateway"
 import { IUsersRepository } from "#/infra/repositories/users-repository/index.gateway"
 
-export class SocialSignInUseCase {
+export class SignInUseCase {
     constructor(
         private readonly tokenGenerator: ITokenizer,
         private readonly usersRepository: IUsersRepository
