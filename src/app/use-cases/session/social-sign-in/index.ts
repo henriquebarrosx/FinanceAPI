@@ -6,7 +6,7 @@ import { IUsersRepository } from "#/infra/repositories/users-repository/index.ga
 export class SocialSignInUseCase {
     constructor(private readonly usersRepository: IUsersRepository) { }
 
-    async execute(input: Input): Promise<IResponse<SuccessOutput | FailedOutput>> {
+    async execute(input: Input): Promise<IResponse<Output>> {
         const user = this.getUserBuild(input)
 
         if (await this.validateEmailAlreadyRegistered(user.email)) {
@@ -37,10 +37,6 @@ export type Input = {
     pictureURL: string
 }
 
-export type SuccessOutput = {
+export type Output = {
     id: string
-}
-
-export type FailedOutput = {
-    message: string
 }
