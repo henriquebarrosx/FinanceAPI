@@ -6,29 +6,25 @@ import { IConnection } from "#/infra/adapters/mongo-client-adapter/index.adapter
 export class UsersRepository implements IUsersRepository {
     constructor(private readonly connection: IConnection) { }
 
-    async findByEmail(email: string): Promise<User[]> {
+    async findByEmail(email: string): Promise<User | undefined> {
         const database = await this.connection.start()
         const collection = database.collection("users")
 
         logger.info(`[users repository] finding users by email: ${email}`)
 
-        const users: User[] = []
-        const results = await collection.find<User>({ email }).toArray()
+        let document: User | undefined
+        const result = await collection.findOne<UserModel>({ email })
 
-        results.forEach((result) => {
-            const { id, name, email, pictureURL } = result
-
-            const user = new User()
-                .withId(id)
-                .withName(name)
-                .withEmail(email)
-                .withPictureURL(pictureURL)
-
-            users.push(user)
-        })
+        if (result) {
+            document = new User()
+                .withId(result._id)
+                .withName(result.name)
+                .withEmail(result.email)
+                .withPictureURL(result.pictureURL)
+        }
 
         this.connection.end()
-        return users
+        return document
     }
 
     async create(user: User): Promise<{ id: string }> {
@@ -50,3 +46,5 @@ export class UsersRepository implements IUsersRepository {
         return { id: result.insertedId.toString() }
     }
 }
+
+type UserModel = Omit<User, "id"> & { _id: string }
