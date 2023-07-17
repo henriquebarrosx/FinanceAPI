@@ -21,7 +21,7 @@ export class TransactionsRepository implements ITransactionsRepository {
             .insertOne({
                 userId: transaction.userId,
                 date: formatedDate,
-                type: transaction.type,
+                isExpense: transaction.isExpense,
                 value: transaction.value,
                 description: transaction.description,
                 createdAt: new Date().toISOString(),

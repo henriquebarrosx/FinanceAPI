@@ -15,7 +15,7 @@ export class CreateTransactionsUseCase {
         return new Transaction()
             .withUserId(transaction.userId)
             .withDate(transaction.date)
-            .withType(transaction.type)
+            .withExpenseFlag(transaction.isExpense)
             .withValue(transaction.value)
             .withDescription(transaction.description)
     }
@@ -24,7 +24,7 @@ export class CreateTransactionsUseCase {
 export type Input = {
     userId: string
     date: Date
-    type: string
+    isExpense: boolean
     value: number
     description: string
 }
