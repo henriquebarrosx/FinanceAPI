@@ -68,4 +68,17 @@ export class Transaction {
 
         throw new InvalidArgException("Invalid updated date value")
     }
+
+    toJSON() {
+        return {
+            id: this.id,
+            userId: this.userId,
+            date: this.date,
+            type: this.type,
+            value: this.value,
+            description: this.description,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt,
+        }
+    }
 }
