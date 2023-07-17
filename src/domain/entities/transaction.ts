@@ -1,11 +1,12 @@
 import { localDateAdapter } from "#/infra/adapters/date-fns-adapter"
+import { TransactionTypeEnum } from "#/domain/enums/transaction-type"
 import { InvalidArgException } from "#/infra/exceptions/invalid-arg-exception"
 
 export class Transaction {
     public id: string = ""
     public userId: string = ""
     public date: Date = new Date()
-    public type: string = ""
+    public type: TransactionTypeEnum = TransactionTypeEnum.GAIN
     public value: number = 0
     public description: string = ""
     public createdAt: Date = new Date()
@@ -30,9 +31,16 @@ export class Transaction {
         throw new InvalidArgException("Invalid transaction date")
     }
 
-    withType(value: "IN" | "OUT"): Transaction {
-        this.type = value
-        return this
+    withType(value: string): Transaction {
+        const convertedValueType = value as TransactionTypeEnum
+        const acceptedTypes = [TransactionTypeEnum.GAIN, TransactionTypeEnum.EXPENSE]
+
+        if (acceptedTypes.includes(convertedValueType)) {
+            this.type = convertedValueType
+            return this
+        }
+
+        throw new InvalidArgException(`Transaction type only accept: ${acceptedTypes}`)
     }
 
     withValue(value: number): Transaction {

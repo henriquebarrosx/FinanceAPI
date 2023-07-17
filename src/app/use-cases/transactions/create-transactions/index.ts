@@ -24,7 +24,7 @@ export class CreateTransactionsUseCase {
 export type Input = {
     userId: string
     date: Date
-    type: "IN" | "OUT"
+    type: string
     value: number
     description: string
 }
