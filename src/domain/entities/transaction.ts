@@ -32,7 +32,7 @@ export class Transaction {
     }
 
     withType(value: string): Transaction {
-        const convertedValueType = value as TransactionTypeEnum
+        const convertedValueType = value.toLowerCase() as TransactionTypeEnum
         const acceptedTypes = [TransactionTypeEnum.GAIN, TransactionTypeEnum.EXPENSE]
 
         if (acceptedTypes.includes(convertedValueType)) {
