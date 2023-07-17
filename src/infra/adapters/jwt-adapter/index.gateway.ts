@@ -1,4 +1,4 @@
-export interface ITokenizer {
+export interface IAuthenticator {
     assign(data: string): string
-    verify(): boolean
+    verify(token: string): any
 }

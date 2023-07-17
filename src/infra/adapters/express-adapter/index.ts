@@ -1,7 +1,6 @@
 import { logger } from "../logger-adapter"
 import express, { Express, Request, Response } from "express"
-
-import { IHttpServer, IRequestType } from "./index.gateway"
+import { HttpRequestCallbackType, IHttpServer, IRequestType } from "./index.gateway"
 
 export class ExpressAdapter implements IHttpServer {
     private app: Express
@@ -17,23 +16,24 @@ export class ExpressAdapter implements IHttpServer {
         })
     }
 
-    on(requestType: IRequestType, entrypoint: string, callback: Function): void {
+    on(requestType: IRequestType, entrypoint: string, callback: HttpRequestCallbackType): void {
         this.app[requestType](entrypoint, async (request: Request, response: Response) => {
             try {
-                const output = await callback(request.body, request.params)
-                response.status(output.status).json(output.data)
+                const { headers, body, params } = request
+                const output = await callback({ headers, body, params })
+                response.status(output.status).send(output.data)
                 return
             }
 
             catch (exception: any) {
                 if (exception?.code && exception?.message) {
                     logger.error(`[ Error ${exception.code} ] - ${exception.message}`)
-                    response.status(exception.code).json({ message: exception.message })
+                    response.status(exception.code).send({ message: exception.message })
                     return
                 }
 
                 logger.error(`[ Error 500 ] - Internal Server Error: ${exception?.message}`)
-                response.status(500).json({ message: "Internal Server Error" })
+                response.status(500).send({ message: "Internal Server Error" })
                 return
             }
         })

@@ -1,4 +1,4 @@
-import { localDate } from "#/index"
+import { localDateAdapter } from "#/infra/adapters/date-fns-adapter"
 import { InvalidArgException } from "#/infra/exceptions/invalid-arg-exception"
 
 export class Transaction {
@@ -22,7 +22,7 @@ export class Transaction {
     }
 
     withDate(date: Date | string | number): Transaction {
-        if (localDate.isValid(date)) {
+        if (localDateAdapter.isValid(date)) {
             this.date = new Date(date)
             return this
         }
@@ -52,7 +52,7 @@ export class Transaction {
     }
 
     withTimestamp(date: Date | string | number): Transaction {
-        if (localDate.isValid(date)) {
+        if (localDateAdapter.isValid(date)) {
             this.createdAt = new Date(date)
             return this
         }
@@ -61,7 +61,7 @@ export class Transaction {
     }
 
     withUpdatedAt(date: Date | string | number): Transaction {
-        if (localDate.isValid(date)) {
+        if (localDateAdapter.isValid(date)) {
             this.updatedAt = new Date(date)
             return this
         }

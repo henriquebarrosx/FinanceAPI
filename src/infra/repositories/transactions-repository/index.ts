@@ -1,7 +1,7 @@
-import { localDate } from "#/index"
 import { logger } from "#/infra/adapters/logger-adapter"
 import { ITransactionsRepository } from "./index.gateway"
 import { Transaction } from "#/domain/entities/transaction"
+import { localDateAdapter } from "#/infra/adapters/date-fns-adapter"
 import { IConnection } from "#/infra/adapters/mongo-client-adapter/index.adapter"
 import { LocalDateFormatEnum } from "#/infra/adapters/date-fns-adapter/index.gateway"
 
@@ -14,10 +14,13 @@ export class TransactionsRepository implements ITransactionsRepository {
 
         logger.info(`[transactions repository] creating transaction: ${JSON.stringify(transaction.toJSON())}`)
 
+        const zonedTime = localDateAdapter.toZonedTime(transaction.date)
+        const formatedDate = localDateAdapter.format(zonedTime, LocalDateFormatEnum.DATE)
+
         const { insertedId } = await collection
             .insertOne({
                 userId: transaction.userId,
-                date: localDate.format(transaction.date, LocalDateFormatEnum.DATE),
+                date: formatedDate,
                 type: transaction.type,
                 value: transaction.value,
                 description: transaction.description,
