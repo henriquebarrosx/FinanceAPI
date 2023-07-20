@@ -65,6 +65,16 @@ export class TransactionsRepository implements ITransactionsRepository {
     }
 
     async findByUserId(userId: string): Promise<Transaction[]> {
-        throw new Error("Method not implemented.")
+        const database = await this.connection.start()
+        const collection = database.collection("transactions")
+
+        logger.info(`[transactions repository] searching for all transactions`)
+
+        const documents = await collection
+            .find<Transaction>({ userID: userId })
+            .toArray()
+
+        this.connection.end()
+        return documents
     }
 }
