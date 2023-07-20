@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb"
 import { logger } from "#/infra/adapters/logger-adapter"
 import { ITransactionsRepository } from "./index.gateway"
 import { Transaction } from "#/domain/entities/transaction"
@@ -30,6 +31,33 @@ export class TransactionsRepository implements ITransactionsRepository {
 
         this.connection.end()
         return { id: insertedId.toString() }
+    }
+
+    async update(transaction: Transaction): Promise<void> {
+        const database = await this.connection.start()
+        const collection = database.collection("transactions")
+
+        logger.info(`[transactions repository] updating transaction: ${JSON.stringify(transaction.toJSON())}`)
+
+        const zonedTime = localDateAdapter.toZonedTime(transaction.date)
+        const formatedDate = localDateAdapter.format(zonedTime, LocalDateFormatEnum.DATE)
+
+        await collection
+            .updateOne(
+                { _id: new ObjectId(transaction.id) },
+                {
+                    $set: {
+                        date: formatedDate,
+                        isExpense: transaction.isExpense,
+                        value: transaction.value,
+                        description: transaction.description,
+                        updatedAt: new Date().toISOString(),
+                    }
+                }
+            )
+
+        this.connection.end()
+        return
     }
 
     async findAll(): Promise<Transaction[]> {
