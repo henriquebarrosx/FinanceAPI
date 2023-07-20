@@ -1,4 +1,5 @@
 import { User } from "#/domain/entities/user"
+import { UserModel } from "#/domain/models/user"
 import { IUsersRepository } from "./index.gateway"
 import { logger } from "#/infra/adapters/logger-adapter"
 import { IConnection } from "#/infra/adapters/mongo-client-adapter/index.adapter"
@@ -23,7 +24,7 @@ export class UsersRepository implements IUsersRepository {
                 .withPictureURL(result.pictureURL)
         }
 
-        this.connection.end()
+        await this.connection.end()
         return document
     }
 
@@ -42,9 +43,7 @@ export class UsersRepository implements IUsersRepository {
                 updatedAt: new Date().toISOString(),
             })
 
-        this.connection.end()
+        await this.connection.end()
         return { id: result.insertedId.toString() }
     }
 }
-
-type UserModel = Omit<User, "id"> & { _id: string }

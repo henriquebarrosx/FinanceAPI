@@ -6,23 +6,28 @@ export class MongoClientAdapter implements IConnection {
     private readonly client: MongoClient
 
     constructor() {
-        this.client = new MongoClient(process.env.DATABASE_URL!, {
-            serverApi: {
-                strict: true,
-                deprecationErrors: true,
-                version: ServerApiVersion.v1,
+        this.client = new MongoClient(
+            process.env.DATABASE_URL!,
+            {
+                serverApi: {
+                    strict: true,
+                    deprecationErrors: true,
+                    version: ServerApiVersion.v1,
+                }
             }
-        })
+        )
     }
 
     async start(): Promise<Db> {
         logger.info("[database] Connecting database...")
         await this.client.connect()
-        return this.client.db(process.env.DATABASE)
+        const connection = this.client.db(process.env.DATABASE)
+        logger.info("[database] Connected sucessfully!")
+        return connection
     }
 
-    end() {
-        this.client.close()
+    async end(): Promise<void> {
+        await this.client.close()
         logger.info("[database] database connection end")
     }
 }
