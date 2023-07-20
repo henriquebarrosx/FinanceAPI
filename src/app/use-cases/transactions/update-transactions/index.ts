@@ -2,17 +2,19 @@ import { Transaction } from "#/domain/entities/transaction"
 import { IResponse } from "#/infra/adapters/express-adapter/index.gateway"
 import { ITransactionsRepository } from "#/infra/repositories/transactions-repository/index.gateway"
 
-export class CreateTransactionsUseCase {
+export class UpdateTransactionsUseCase {
     constructor(private readonly transactionsRepository: ITransactionsRepository) { }
 
     async execute(input: Input): Promise<IResponse<Output>> {
         const transaction = this.getTransactionBuild(input)
-        const { id } = await this.transactionsRepository.create(transaction)
-        return { status: 201, data: { id } }
+        await this.transactionsRepository.update(transaction)
+        return { status: 204 }
     }
 
     private getTransactionBuild(transactionData: Input): Transaction {
         return new Transaction()
+            .withId(transactionData.id)
+            .withUserId(transactionData.id)
             .withUserId(transactionData.userId)
             .withDate(transactionData.date)
             .withExpenseFlag(transactionData.isExpense)
@@ -22,6 +24,7 @@ export class CreateTransactionsUseCase {
 }
 
 export type Input = {
+    id: string
     userId: string
     date: Date
     isExpense: boolean
@@ -29,6 +32,4 @@ export type Input = {
     description: string
 }
 
-export type Output = {
-    id: string
-}
+type Output = {}
