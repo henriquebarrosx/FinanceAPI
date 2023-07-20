@@ -7,6 +7,7 @@ import { TransactionsRepository } from "#/infra/repositories/transactions-reposi
 
 import { SignInUseCase } from "#/app/use-cases/session/sign-in"
 import { CreateTransactionsUseCase } from "#/app/use-cases/transactions/create-transactions"
+import { UpdateTransactionsUseCase } from "#/app/use-cases/transactions/update-transactions"
 
 const authentication = new JwtAdapter()
 const connection = new MongoClientAdapter()
@@ -26,6 +27,12 @@ export class Router {
         this.httpServer.on("post", "/v1/transactions", ({ body, headers }) => {
             const sessionId = authentication.verify(headers.authorization)
             const createTransaction = new CreateTransactionsUseCase(transactionsRepository)
+            return createTransaction.execute({ ...body, userId: sessionId })
+        })
+
+        this.httpServer.on("put", "/v1/transactions", ({ body, headers }) => {
+            const sessionId = authentication.verify(headers.authorization)
+            const createTransaction = new UpdateTransactionsUseCase(transactionsRepository)
             return createTransaction.execute({ ...body, userId: sessionId })
         })
     }
