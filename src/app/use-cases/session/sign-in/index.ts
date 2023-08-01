@@ -11,10 +11,10 @@ export class SignInUseCase {
 
     async execute(input: Input): Promise<IResponse<Output>> {
         const user = this.getUserBuild(input)
-        const foundUser = await this.usersRepository.findByEmail(user.email)
+        const userByEmail = await this.usersRepository.findByEmail(user.email)
 
-        if (foundUser) {
-            const accessToken = this.authentication.assign(foundUser.id)
+        if (userByEmail) {
+            const accessToken = this.authentication.assign(userByEmail.id)
             return { status: 200, data: { accessToken } }
         }
 
